@@ -1,7 +1,12 @@
 name: UI automated tests
 
 on:
-  push
+  pull_request:
+    branches:
+      - "main"
+  push:
+    branches:
+      - "main"
 
 jobs:
   test:
