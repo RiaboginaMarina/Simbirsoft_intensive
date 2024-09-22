@@ -10,16 +10,18 @@
 
 ### Шаги:
 
-1. Открыть страницу "https://www.globalsqa.com/angularJs-protractor/BankingProject/#/manager"
+1. Открыть страницу "https://www.globalsqa.com/angularJs-protractor/BankingProject/#/manager"  
 2. Нажать кнопку Add Customer
 3. Заполнить поля First Name, Last Name, Post Code валидными данными
 4. Нажать кнопку Add Customer под формой регистрации
 5. Проверить появление уведомления об успешном создании клиента
+6. Нажать кнопку Close в окне уведомления
+7. Нажать кнопку Customers
+8. Проверить добавление нового клиента
 
 ### Ожидаемый результат:
 
-- Появилось всплывающее сообщение с текстом "Customer added successfully with customer id :" и номером id
-
+- В списке клиентов появился новый клиент с заданными именем и фамилией
 ## SS-02 Сортировка списка клиентов по имени
 
 ### Цель:
