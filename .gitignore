@@ -1,1 +1,8 @@
 venv/
+allure-results/
+.pytest_cache/
+.idea
+.venv
+.env
+env/
+

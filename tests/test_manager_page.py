@@ -1,41 +1,8 @@
-import random
-import string
-import time
-
 import allure
 import pytest
 
+from common.utils import convert_table_data_to_list, create_word_from_number
 from pages.manager_page import ManagerPage
-
-
-def generate_random_number(length):
-    rand_number = ''
-    for i in range(length):
-        rand_number += str(random.randint(0, 9))
-    return rand_number
-
-
-def create_word_from_number(number):
-    alphabet = string.ascii_lowercase
-    word = ''
-    while number:
-
-        letter_number = int(number[:2])
-        word += alphabet[letter_number % 26]
-        number = number[2:]
-    return word
-
-
-def generate_random_word(length):
-    alphabet = string.ascii_lowercase
-    return ''.join(random.choice(alphabet) for _ in range(length))
-
-
-def convert_table_data_to_list(table_data):
-    result = []
-    for line in table_data.split('\n')[1:]:
-        result.append(line.split())
-    return result
 
 
 @allure.title("Создание нового клиента")
@@ -59,29 +26,32 @@ def convert_table_data_to_list(table_data):
 )
 @pytest.mark.parametrize("surname, post_code",
                          [
-                             (generate_random_word(10),
-                              generate_random_number(10))
+                             ("rand_str", "rand_num")
                          ])
-def test_add_customer_successfully(browser, surname, post_code):
-
+def test_add_customer_successfully(request, browser, surname, post_code):
+    post_code_result = request.getfixturevalue(post_code)
+    surname_result = request.getfixturevalue(surname)
     with allure.step("Открытие страницы https://www.globalsqa.com/angularJs-protractor/BankingProject/#/manager"):
         page = ManagerPage(browser)
         page.open()
-        page.wait_for_page_load()
 
     with allure.step("Открытие формы создания клиента"):
         page.open_add_customers_form()
-        time.sleep(3)
 
     with allure.step("Заполнение формы создания нового клиента"):
-        name = create_word_from_number(post_code)
-        page.fill_customers_form(name, surname, post_code)
+        name = create_word_from_number(post_code_result)
+        page.fill_customers_form(name, surname_result, post_code_result)
         page.click_submit_form_button()
 
     with allure.step("Проверка появления всплывающего уведомления"):
         expected_alert_text = "Customer added successfully with customer id :"
-        actual_alert_text = page.get_text_from_alert_window()
+        actual_alert_text = page.get_text_from_alert_and_close()
         assert expected_alert_text in actual_alert_text, "Текст об успешном создании клиента не найден"
+
+    with allure.step("Проверка добавления созданного клиента в таблицу"):
+        page.open_customers_data()
+        customer_list = page.get_text_from_table()
+        assert name and surname_result in customer_list
 
 
 @allure.title("Сортировка списка клиентов по имени")
@@ -103,15 +73,12 @@ def test_add_customer_successfully(browser, surname, post_code):
     """
 )
 def test_alphabet_order(browser):
-
     with allure.step("Открытие страницы https://www.globalsqa.com/angularJs-protractor/BankingProject/#/manager"):
         page = ManagerPage(browser)
         page.open()
-        page.wait_for_page_load()
 
     with allure.step("Открытие списка клиентов"):
         page.open_customers_data()
-        time.sleep(2)
 
     with allure.step("Получение несортированных данных из таблицы"):
         unsorted_table = convert_table_data_to_list(page.get_text_from_table())
@@ -145,15 +112,12 @@ def test_alphabet_order(browser):
     """
 )
 def test_delete_client_successfully(browser):
-
     with allure.step("Открытие страницы https://www.globalsqa.com/angularJs-protractor/BankingProject/#/manager"):
         page = ManagerPage(browser)
         page.open()
-        page.wait_for_page_load()
 
     with allure.step("Открытие списка клиентов"):
         page.open_customers_data()
-        time.sleep(2)
 
     with allure.step("Нахождение имени клиента для удаления"):
         name_list = page.get_names_from_table()

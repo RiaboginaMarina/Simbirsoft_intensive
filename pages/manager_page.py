@@ -1,8 +1,8 @@
-from pages.locators import AllLocators
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
+
+from pages.locators import AllLocators
 
 
 class ManagerPage:
@@ -12,19 +12,18 @@ class ManagerPage:
 
     def open(self):
         self.browser.get(self.url)
-
-    def wait_for_page_load(self):
-        try:
-            element_present = EC.visibility_of_element_located((By.XPATH, "//button[@ng-class='btnClass1']"))
-            WebDriverWait(self.browser, 5).until(element_present)
-        except TimeoutException:
-            print("Ожидание загрузки страницы истекло")
+        element_present = EC.visibility_of_element_located((By.XPATH, "//button[@ng-class='btnClass1']"))
+        WebDriverWait(self.browser, 5).until(element_present)
 
     def open_add_customers_form(self):
         self.browser.find_element(*AllLocators.ADD_CUSTOMER_OPEN_FORM_BUTTON).click()
+        element_present = EC.visibility_of_element_located((By.XPATH, "//input[@ng-model='fName']"))
+        WebDriverWait(self.browser, 5).until(element_present)
 
     def open_customers_data(self):
         self.browser.find_element(*AllLocators.CUSTOMER_BUTTON).click()
+        element_present = EC.visibility_of_element_located((By.TAG_NAME, "table"))
+        WebDriverWait(self.browser, 5).until(element_present)
 
     def set_first_name(self, name):
         name_input = self.browser.find_element(*AllLocators.FIRST_NAME_FIELD)
@@ -46,9 +45,10 @@ class ManagerPage:
         self.set_last_name(surname)
         self.set_post_code(post_code)
 
-    def get_text_from_alert_window(self):
+    def get_text_from_alert_and_close(self):
         alert = self.browser.switch_to.alert
         alert_text = alert.text
+        alert.accept()
         return alert_text
 
     def get_text_from_table(self):
@@ -68,6 +68,3 @@ class ManagerPage:
         (self.browser.find_element(
             AllLocators.DELETE_BUTTON[0],
             AllLocators.DELETE_BUTTON[1].format(name)).click())
-
-
-
