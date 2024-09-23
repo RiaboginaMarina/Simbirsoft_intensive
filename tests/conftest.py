@@ -1,8 +1,7 @@
-import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
-from common.utils import generate_random_number, generate_random_word
+from tests.test_fixtures import *
 
 
 @pytest.fixture(scope="function")
@@ -14,13 +13,3 @@ def browser():
     yield browser
     print("\nquit browser..")
     browser.quit()
-
-
-@pytest.fixture
-def rand_num():
-    return generate_random_number(10)
-
-
-@pytest.fixture
-def rand_str():
-    return generate_random_word(10)

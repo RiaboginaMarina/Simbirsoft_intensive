@@ -1,5 +1,4 @@
 import allure
-import pytest
 
 from common.utils import convert_table_data_to_list, create_word_from_number
 from pages.manager_page import ManagerPage
@@ -27,13 +26,7 @@ from pages.manager_page import ManagerPage
         - В списке клиентов появился новый клиент с заданными именем и фамилией     
     """
 )
-@pytest.mark.parametrize("surname, post_code",
-                         [
-                             ("rand_str", "rand_num")
-                         ])
-def test_add_customer_successfully(request, browser, surname, post_code):
-    post_code_result = request.getfixturevalue(post_code)
-    surname_result = request.getfixturevalue(surname)
+def test_add_customer_successfully(browser, rand_surname, rand_post_code):
     with allure.step("Открытие страницы https://www.globalsqa.com/angularJs-protractor/BankingProject/#/manager"):
         page = ManagerPage(browser)
         page.open()
@@ -42,19 +35,20 @@ def test_add_customer_successfully(request, browser, surname, post_code):
         page.open_add_customers_form()
 
     with allure.step("Заполнение формы создания нового клиента"):
-        name = create_word_from_number(post_code_result)
-        page.fill_customers_form(name, surname_result, post_code_result)
+        name = create_word_from_number(rand_post_code)
+        page.fill_customers_form(name, rand_surname, rand_post_code)
         page.click_submit_form_button()
 
     with allure.step("Проверка появления всплывающего уведомления"):
         expected_alert_text = "Customer added successfully with customer id :"
-        actual_alert_text = page.get_text_from_alert_and_close()
+        actual_alert_text = page.get_text_from_alert()
+        page.close_alert_window()
         assert expected_alert_text in actual_alert_text, "Текст об успешном создании клиента не найден"
 
     with allure.step("Проверка добавления созданного клиента в таблицу"):
         page.open_customers_data()
         customer_list = page.get_text_from_table()
-        assert name and surname_result in customer_list
+        assert name and rand_surname in customer_list, f"Клиента {name} {rand_surname} нет в таблице"
 
 
 @allure.title("Сортировка списка клиентов по имени")
@@ -124,7 +118,6 @@ def test_delete_client_successfully(browser):
 
     with allure.step("Нахождение имени клиента для удаления"):
         name_list = page.get_names_from_table()
-        avg_name_length = sum(map(len, name_list)) // len(name_list)
         name_list_sorted = sorted(name_list, key=len)
         name_to_delete = name_list_sorted[len(name_list_sorted) // 2 - 1]
 
