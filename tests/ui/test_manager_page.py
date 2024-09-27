@@ -1,9 +1,11 @@
 import allure
+import pytest
 
 from common.utils import convert_table_data_to_list, create_word_from_number
 from pages.manager_page import ManagerPage
 
 
+@allure.story("UI")
 @allure.title("Создание нового клиента")
 @allure.description(
     """
@@ -26,6 +28,7 @@ from pages.manager_page import ManagerPage
         - В списке клиентов появился новый клиент с заданными именем и фамилией     
     """
 )
+@pytest.mark.Ui
 def test_add_customer_successfully(browser, rand_surname, rand_post_code):
     with allure.step("Открытие страницы https://www.globalsqa.com/angularJs-protractor/BankingProject/#/manager"):
         page = ManagerPage(browser)
@@ -51,6 +54,7 @@ def test_add_customer_successfully(browser, rand_surname, rand_post_code):
         assert name and rand_surname in customer_list, f"Клиента {name} {rand_surname} нет в таблице"
 
 
+@allure.story("UI")
 @allure.title("Сортировка списка клиентов по имени")
 @allure.description(
     """
@@ -69,6 +73,7 @@ def test_add_customer_successfully(browser, rand_surname, rand_post_code):
         - Клиенты отсортировались по имени     
     """
 )
+@pytest.mark.Ui
 def test_alphabet_order(browser):
     with allure.step("Открытие страницы https://www.globalsqa.com/angularJs-protractor/BankingProject/#/manager"):
         page = ManagerPage(browser)
@@ -89,6 +94,7 @@ def test_alphabet_order(browser):
         assert expected_sorted_table == actual_sorted_table, "Данные не отсортировались по столбцу first name"
 
 
+@allure.story("UI")
 @allure.title("Удаление клиента")
 @allure.description(
     """
@@ -108,6 +114,7 @@ def test_alphabet_order(browser):
         - Клиент удален из таблицы Customers     
     """
 )
+@pytest.mark.Ui
 def test_delete_client_successfully(browser):
     with allure.step("Открытие страницы https://www.globalsqa.com/angularJs-protractor/BankingProject/#/manager"):
         page = ManagerPage(browser)

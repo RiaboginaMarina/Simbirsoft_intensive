@@ -1,0 +1,41 @@
+name: API tests
+
+on:
+  pull_request:
+    branches:
+      - "main"
+  push:
+    branches:
+      - "main"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Backend repository
+        uses: actions/checkout@v3
+        with:
+          repository: https://github.com/sun6r0/test-service.git
+          path: backend
+      - name: Set up Docker Compose
+        working-directory: ./backend
+        run: |
+          docker-compose up -d
+      - name: Wait for Backend
+        run: |
+          sleep 30
+      - name: Checkout API tests repository
+        uses: actions/checkout@v3
+      - name: setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+      - name: install dependencies
+        run: pip install -r requirements.txt
+      - name: Run API tests
+        run: pytest -m Api
+      - name: Shutdown backend
+        working-directory: ./backend
+        run: |
+          docker-compose down

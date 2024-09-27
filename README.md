@@ -2,13 +2,19 @@
 
 UI автотесты на создание клиента, удаление клиента и сортировку списка клиентов по имени.
 
-В проекте используются Python 3.10, Selenium, Pytest. 
+API автотесты на отправку GET, POST, PATCH, DELETE запросов.
+
+В проекте используются Python 3.10, Selenium, Pytest, Requests, Pydantic 
 
 Реализована возможность параллельного запуска тестов с помощью pytest-xdist.
 
 Выполнен отчет о тестировании с помощью Allure.
 
-Тестирование проводится в браузере Chrome версии 128.0.6613.85.
+UI тестирование проводится в браузере Chrome версии 128.0.6613.85.
+
+
+
+
 ## Установка и запуск
 
 1. Склонировать репозиторий:
@@ -28,9 +34,13 @@ venv\Scripts\activate.bat
 ```commandline
 pip install -r requirements.txt
 ```
-6. Запустить тесты:
+6. Запустить UI тесты:
 ```commandline
-pytest ./tests/test_manager_page.py --alluredir=allure-results
+pytest -m Ui --alluredir=allure-results
+```
+Запустить API тесты:
+```commandline
+pytest -m Api --alluredir=allure-results
 ```
 7. Посмотреть сгенерированный allure отчет:
 ```commandline
