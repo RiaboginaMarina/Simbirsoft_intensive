@@ -16,7 +16,7 @@ jobs:
       - name: Checkout Backend repository
         uses: actions/checkout@v3
         with:
-          repository: https://github.com/sun6r0/test-service.git
+          repository: sun6r0/test-service
           path: backend
       - name: Set up Docker Compose
         working-directory: ./backend
