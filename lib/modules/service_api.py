@@ -12,14 +12,14 @@ class ServiceApi(Session):
     def sa_create_entity(self, **kwargs):
         return self.post(url=self.create_entity_url, **kwargs)
 
-    def sa_get_all_entities(self):
-        return self.get(url=self.get_entities_url)
+    def sa_get_all_entities(self, **kwargs):
+        return self.get(url=self.get_entities_url, **kwargs)
 
-    def sa_get_entity(self, entity_id):
-        return self.get(url=self.get_entity_url.format(entity_id))
+    def sa_get_entity(self, entity_id, **kwargs):
+        return self.get(url=self.get_entity_url.format(entity_id), **kwargs)
 
-    def sa_delete_entity(self, entity_id):
-        return self.delete(url=self.delete_entity_url.format(entity_id))
+    def sa_delete_entity(self, entity_id, **kwargs):
+        return self.delete(url=self.delete_entity_url.format(entity_id), **kwargs)
 
     def sa_update_entity(self, entity_id, **kwargs):
         return self.patch(url=self.update_entity_url.format(entity_id), **kwargs)

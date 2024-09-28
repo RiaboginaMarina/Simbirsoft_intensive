@@ -1,7 +1,7 @@
 import allure
 import pytest
 
-from lib.service_api import *
+from lib.service_api import get_entity, create_entity_and_get_id, get_all_entities, delete_entity, update_entity
 
 
 @allure.story("API")
@@ -29,7 +29,7 @@ def test_create_entity(api_client, test_entity):
         entity_id = create_entity_and_get_id(api_client, test_entity.model_dump())
 
     with allure.step("Проверить создание сущности"):
-        assert entity_id == get_entity(api_client, entity_id)["id"]
+        assert entity_id == get_entity(api_client, entity_id)["id"], "Сущность не была создана"
 
     with allure.step("Удаление сущности"):
         delete_entity(api_client, entity_id)
@@ -63,7 +63,7 @@ def test_get_all_entities(api_client, temp_entity):
         response = get_all_entities(api_client)
 
     with allure.step("Проверить получение списка"):
-        assert len(response) > 0
+        assert len(response) > 0, "Список сущностей не получен"
 
 
 @allure.story("API")
@@ -94,7 +94,7 @@ def test_get_entity(api_client, temp_entity):
         response = get_entity(api_client, temp_entity.id)
 
     with allure.step("Проверить получение сущности"):
-        assert len(response) > 0
+        assert len(response) > 0, "Сущность не была получена"
 
 
 @allure.story("API")
@@ -127,7 +127,7 @@ def test_update_entity(api_client, temp_entity):
 
     with allure.step("Проверить обновление данных поля 'title' сущности"):
         new_entity = get_entity(api_client, temp_entity.id)
-        assert new_entity.get("title") == temp_entity.title
+        assert new_entity.get("title") == temp_entity.title, "Данные сущности не обновились"
 
 
 @allure.story("API")
@@ -156,4 +156,4 @@ def test_delete_entity(api_client, created_entity):
 
     with allure.step("Проверить удаление сущности"):
         all_entities = get_all_entities(api_client)
-        assert all(entity.get("id") != created_entity.id for entity in all_entities["entity"])
+        assert all(entity.get("id") != created_entity.id for entity in all_entities["entity"]), "Сущность не была удалена"
