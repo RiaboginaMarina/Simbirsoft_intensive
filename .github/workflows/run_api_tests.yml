@@ -18,11 +18,10 @@ jobs:
         with:
           repository: sun6r0/test-service
           path: backend
-      - uses: actions/checkout@v4
       - name: Run docker-compose
-        uses: hoverkraft-tech/compose-action@v2.0.1
-        with:
-          compose-file: "./backend/test-service/docker-compose.yml"
+        run: |
+          cd backend
+          docker-compose up -d --build
       - name: Wait for Backend
         run: |
           sleep 30
