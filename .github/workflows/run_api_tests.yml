@@ -20,7 +20,7 @@ jobs:
           path: backend
       - name: Set up Docker Compose
         run: |
-          sudo apt-get install -y docker compose
+          sudo apt-get install -y docker-compose
       - name: Run docker-compose
         run: |
           cd backend
